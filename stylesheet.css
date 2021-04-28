@@ -1,0 +1,46 @@
+h1 {
+    color: black;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+h2 {
+    color: black;
+    font-weight: bold;
+    font-family: sans-serif;
+}
+
+#kreis {
+    fill: #6eeeae;
+}
+
+#punkt {
+    fill: #ee7b6e;
+}
+
+rect {
+    x: 1;
+    y: 1;
+    width: 498px;
+    height: 498px;
+    fill: none;
+    stroke: #776969;
+    stroke-width: 2;
+}
+
+button {
+    background-color: #bdcad6;
+    border: 2px solid #428fcc;
+    color: #086c9d;
+    padding: 5px 30px;
+    margin: 0 20px;
+    text-align: center;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: sans-serif;
+}
+
+p {
+    font-family: sans-serif;
+}
