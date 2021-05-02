@@ -18,26 +18,23 @@ Roter Punkt 2
 var timerFunction = null;
 
 // kreis init
+var circle = document.getElementById("kreis");
 var xKreisMitte = 250; // x position des kreis
 var yKreisMitte = 250;
 var rKreis = 50;
 
 
-// punkt init
+// Punkt 1, init
+var punkt = document.getElementById("punkt");
 var x = 193; // x position der punktmitte
 var y = 61; // y position der punktmitte
-var rPunkt = 5;
+const r = 30; // radius
 
-
-// var xp = 7;
-// var yp = 7;
-
-// zweiter Punkt-punkt -->  werte um die richtung des punkts zu berechnen --> verändert sich
-// (spielt keine rolle, was für werte, aber 500 >= x | y => 0)
+// Punkt 2 -->  werte um die richtung des punkts zu berechnen --> verändert sich
 var dx = 3;
 var dy = 1;
 
-
+// Punkt 3
 var newX;
 var newY;
 
@@ -63,7 +60,6 @@ function resetAnimation() {
   console.log("set point 2 after reset to :", dx + " : " + dy);
 
   // set radius and position of kreis randomly
-  var circle = document.getElementById("kreis");
   rKreis = Math.round(Math.random() * 100);
   xKreisMitte = Math.round(Math.random() * (498 - 2 * rKreis) + rKreis);
   yKreisMitte = Math.round(Math.random() * (498 - 2 * rKreis) + rKreis);
@@ -73,14 +69,10 @@ function resetAnimation() {
 }
 
 function animate() {
-
-  var punkt = document.getElementById("punkt");
   x = punkt.getAttribute("cx");  // get point 1
   y = punkt.getAttribute("cy"); // get point 1
   console.log("pos of point 1, x : y: ", x + " :  " + y);
   console.log("pos of point 2 init, dx : dy: ", dx + " : " + dy);
-
-
 
   // Set new point 3
   newX = dx + parseInt(x);
@@ -89,16 +81,16 @@ function animate() {
 
   reflectPointOnCirlce();
 
-  if (newX > 493) { // crash with right border
+  if (newX > (500 - r - 1)) { // crash with right border (minus borderline)
     dx = -dx;
   }
-  if (newX < 7) { // crash with left border
+  if (newX < (0 + r + 1)) { // crash with left border
     dx = -dx;
   }
-  if (newY > 493) { // crash with bottom border
+  if (newY > (500 - r - 1)) { // crash with bottom border
     dy = -dy;
   }
-  if (newY < 7) { // crash with top border
+  if (newY < (0 + r + 1)) { // crash with top border
     dy = -dy;
   }
 
@@ -109,19 +101,14 @@ function animate() {
 
 function reflectPointOnCirlce() {
 // a) liegt P3 auf dem Kreis?
-// ist der Fall, wenn die Distanz zwischen dem Mittelpunkt des Kreises zu neuem Punkt dem Radius des Kreises entspricht.
-// M(xKreisMitte, yKreisMitte)
-// r = rKreis
-// P(dx+rPunkt, dy+punkt auf dem punkt)
-// todo: atm only mitte von punkt--> berechne kontaktstelle punkt auf umfang, and also consider that new point could be negative
-// Norm des Vektors MP
+// dis ist der Fall, wenn die Distanz zwischen dem Mittelpunkt des Kreises zu Punkt, dem Radius des Kreises entspricht.
 
   var xKomponenteVektorMP = (newX - xKreisMitte);
   var yKomponenteVektorMP = (newY - yKreisMitte);
 
   var normVectorMP = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMP, 2) + Math.pow(yKomponenteVektorMP, 2)));
 
-  if (normVectorMP == rKreis) {
+  if (normVectorMP <= (rKreis + r)) {
     console.log("/////////////////   it's the same /////////////////   ");
     dy = -dy;
     dx = -dy;
