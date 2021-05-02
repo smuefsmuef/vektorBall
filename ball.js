@@ -15,17 +15,17 @@ Roter Punkt 2
 
 */
 
+var punkt = document.getElementById("punkt");
+var circle = document.getElementById("kreis");
+
 var timerFunction = null;
 
 // kreis init
-var circle = document.getElementById("kreis");
 var xKreisMitte = 250; // x position des kreis
 var yKreisMitte = 250;
 var rKreis = 50;
 
-
 // Punkt 1, init
-var punkt = document.getElementById("punkt");
 var x = 193; // x position der punktmitte
 var y = 61; // y position der punktmitte
 const r = 30; // radius
@@ -54,11 +54,11 @@ function stopAnimation() {
 
 
 function resetAnimation() {
-  // setzt den zweiten punkt neu, resultat ist minus wert --> 'retour'
-  dx = Math.round(Math.random() * 5 - 10);
-  dy = Math.round(Math.random() * 5 - 10);
-  console.log("set point 2 after reset to :", dx + " : " + dy);
+  resetCircle();
+  resetPoint();
+}
 
+function resetCircle() {
   // set radius and position of kreis randomly
   rKreis = Math.round(Math.random() * 100);
   xKreisMitte = Math.round(Math.random() * (498 - 2 * rKreis) + rKreis);
@@ -68,9 +68,31 @@ function resetAnimation() {
   circle.setAttribute("r", rKreis);
 }
 
+function resetPoint() {
+//Aufgabe b)
+  // Norm Mittelpunkt zu Mittelpunkt muss grösser als Radius plus Radius sein.
+
+  var nextX = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
+  var nextY = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
+  var xKomponenteVektorMM = (nextX - xKreisMitte);
+  var yKomponenteVektorMM = (nextY - yKreisMitte);
+  var normVectorMM = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMM, 2) + Math.pow(yKomponenteVektorMM, 2)));
+
+  if (normVectorMM > r + rKreis) {
+    punkt.setAttribute("cx", nextX);
+    punkt.setAttribute("cy", nextY);
+  } else {
+    console.log("Bitte neue Werte generieren!")
+  }
+
+  // Setze 'Richtung' durch P2
+  dx = Math.round(Math.random() * 5 - 10);
+  dy = Math.round(Math.random() * 5 - 10);
+}
+
 function animate() {
-  x = punkt.getAttribute("cx");  // get point 1
-  y = punkt.getAttribute("cy"); // get point 1
+  x = punkt.getAttribute("cx");
+  y = punkt.getAttribute("cy");
   console.log("pos of point 1, x : y: ", x + " :  " + y);
   console.log("pos of point 2 init, dx : dy: ", dx + " : " + dy);
 
@@ -99,9 +121,11 @@ function animate() {
   punkt.setAttribute("cy", newY);
 }
 
+//Aufgabe a)
 function reflectPointOnCirlce() {
-// a) liegt P3 auf dem Kreis?
-// dis ist der Fall, wenn die Distanz zwischen dem Mittelpunkt des Kreises zu Punkt, dem Radius des Kreises entspricht.
+// a) Punkt auf dem Kreis?
+// dies ist der Fall, wenn die Distanz zwischen dem Mittelpunkt des Kreises zu Punkt,
+// dem Radius des Kreises entspricht.
 
   var xKomponenteVektorMP = (newX - xKreisMitte);
   var yKomponenteVektorMP = (newY - yKreisMitte);
@@ -113,8 +137,11 @@ function reflectPointOnCirlce() {
     dy = -dy;
     dx = -dy;
   }
-
 }
+
+//Aufgabe b)
+
+
 
 
 

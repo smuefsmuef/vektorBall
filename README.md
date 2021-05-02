@@ -7,9 +7,11 @@ smuefsmuef | FS21
 ToDo
 
 (a) Der bewegliche (rote) Punkt soll am Hindernis (grüner Kreis) ebenfalls reflektiert werden.
+-->done
 
 (b) Bei einem Reset soll auch der bewegliche Punkt zufällig neu gesetzt werden (nicht inner-
 halb des Hindernisses!).
+-->done
 
 (c) Fügen Sie eine Textanzeige hinzu, welche die kürzeste Distanz zwischen den beiden
 Kreisen anzeigt.
