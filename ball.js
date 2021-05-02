@@ -1,4 +1,3 @@
-
 /*
 
 Initial Square
@@ -25,8 +24,8 @@ var rKreis = 50;
 
 
 // punkt init
-var xPunktMitte = 193; // x position des punkts
-var yPunktMitte = 61;
+var x = 193; // x position der punktmitte
+var y = 61; // y position der punktmitte
 var rPunkt = 5;
 
 
@@ -37,6 +36,10 @@ var rPunkt = 5;
 // (spielt keine rolle, was für werte, aber 500 >= x | y => 0)
 var dx = 3;
 var dy = 1;
+
+
+var newX;
+var newY;
 
 
 function startAnimation() {
@@ -55,7 +58,7 @@ function stopAnimation() {
 
 function resetAnimation() {
   // setzt den zweiten punkt neu, resultat ist minus wert --> 'retour'
-  dx = Math.round(Math.random() * 5 -10);
+  dx = Math.round(Math.random() * 5 - 10);
   dy = Math.round(Math.random() * 5 - 10);
   console.log("set point 2 after reset to :", dx + " : " + dy);
 
@@ -72,15 +75,19 @@ function resetAnimation() {
 function animate() {
 
   var punkt = document.getElementById("punkt");
-  var x = punkt.getAttribute("cx");  // get point 1
-  var y = punkt.getAttribute("cy"); // get point 1
+  x = punkt.getAttribute("cx");  // get point 1
+  y = punkt.getAttribute("cy"); // get point 1
   console.log("pos of point 1, x : y: ", x + " :  " + y);
   console.log("pos of point 2 init, dx : dy: ", dx + " : " + dy);
 
-  // Set new point 2
 
-  var newX = dx + parseInt(x);
-  var newY = dy + parseInt(y);
+
+  // Set new point 3
+  newX = dx + parseInt(x);
+  newY = dy + parseInt(y);
+  console.log("pos of new point:  ", newX + " :  " + newY);
+
+  reflectPointOnCirlce();
 
   if (newX > 493) { // crash with right border
     dx = -dx;
@@ -95,8 +102,33 @@ function animate() {
     dy = -dy;
   }
 
-  punkt.setAttribute("cx", newX); // set new point 1 (point 2 becomes point 1)
-  punkt.setAttribute("cy", newY); // set new point 1  (point 2 becomes point 1)
+  // set new point 1 (point 3 becomes point 1)
+  punkt.setAttribute("cx", newX);
+  punkt.setAttribute("cy", newY);
 }
+
+function reflectPointOnCirlce() {
+// a) liegt P3 auf dem Kreis?
+// ist der Fall, wenn die Distanz zwischen dem Mittelpunkt des Kreises zu neuem Punkt dem Radius des Kreises entspricht.
+// M(xKreisMitte, yKreisMitte)
+// r = rKreis
+// P(dx+rPunkt, dy+punkt auf dem punkt)
+// todo: atm only mitte von punkt--> berechne kontaktstelle punkt auf umfang, and also consider that new point could be negative
+// Norm des Vektors MP
+
+  var xKomponenteVektorMP = (newX - xKreisMitte);
+  var yKomponenteVektorMP = (newY - yKreisMitte);
+
+  var normVectorMP = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMP, 2) + Math.pow(yKomponenteVektorMP, 2)));
+
+  if (normVectorMP == rKreis) {
+    console.log("/////////////////   it's the same /////////////////   ");
+    dy = -dy;
+    dx = -dy;
+  }
+
+}
+
+
 
 
