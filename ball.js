@@ -38,11 +38,20 @@ var dy = 1;
 var newX;
 var newY;
 
+// Norm = Distanz zwischen Mitte Punkt 1 und 2
+var normVectorPK;
+
+document.getElementById("distanz").innerText = calculateNorm(x, y, xKreisMitte, yKreisMitte) - r - rKreis; // init 117
+
+
+// test
+
 
 function startAnimation() {
   if (timerFunction == null) {
     timerFunction = setInterval(animate, 20);
   }
+
 }
 
 function stopAnimation() {
@@ -71,7 +80,6 @@ function resetCircle() {
 function resetPoint() {
 //Aufgabe b)
   // Norm Mittelpunkt zu Mittelpunkt muss grösser als Radius plus Radius sein.
-
   var nextX = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
   var nextY = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
   var xKomponenteVektorMM = (nextX - xKreisMitte);
@@ -119,6 +127,9 @@ function animate() {
   // set new point 1 (point 3 becomes point 1)
   punkt.setAttribute("cx", newX);
   punkt.setAttribute("cy", newY);
+
+  //c)
+  document.getElementById("distanz").innerText = calculateNorm(newX, newY, xKreisMitte, yKreisMitte) - r - rKreis;
 }
 
 //Aufgabe a)
@@ -133,13 +144,21 @@ function reflectPointOnCirlce() {
   var normVectorMP = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMP, 2) + Math.pow(yKomponenteVektorMP, 2)));
 
   if (normVectorMP <= (rKreis + r)) {
-    console.log("/////////////////   it's the same /////////////////   ");
+    console.log("/////////////////   bounce back /////////////////   ");
     dy = -dy;
     dx = -dy;
   }
 }
 
-//Aufgabe b)
+//Aufgabe c) // todo: check aufgabe 3
+function calculateNorm(xPunkt, yPunkt, xKreis, yKreis) {
+  let xKomponenteVektorPK = (xKreis - xPunkt);
+  let yKomponenteVektorPK = (yKreis - yPunkt);
+  normVectorPK = Math.round(Math.sqrt(Math.pow(xKomponenteVektorPK, 2) + Math.pow(yKomponenteVektorPK, 2)));
+  return normVectorPK;
+
+}
+
 
 
 
