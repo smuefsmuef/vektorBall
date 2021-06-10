@@ -1,34 +1,41 @@
-/*
+//
+//
+// Initial Square
+// 500 x 500
+// Ränder je 2 pixel
 
-Initial Square
-500 x 500
 
+// Kreis Infos Grün
+// (Radius rKreis, Punkt K (Kreismitte) = K(xKreisMitte,yKreisMitte)
 
-Kreis Infos
-(Radius rKreis, Punkt K (Kreismitte) = K(xKreisMitte,yKreisMitte)
+// Roter Punkt 1
+// (Radius rPunkt, Punkt P (Punktmitte) = P(xPunktMitte,yPunktMitte)
 
-Roter Punkt 1
-(Radius rPunkt, Punkt P (Punktmitte) = P(xPunktMitte,yPunktMitte)
-
-Roter Punkt 2
-(Radius rPunkt, Punkt P2 (Punktmitte) = P2(dx,dy)
-
-*/
+// Roter Punkt 2
+// (Radius rPunkt, Punkt P2 (Punktmitte) = P2(dx,dy)
+//
+//
 
 var punkt = document.getElementById("punkt");
 var circle = document.getElementById("kreis");
 
 var timerFunction = null;
 
+
+var quadratsSeiteAussen = 500;
+var quadratSeiteInnen = 496;
+
 // kreis init
-var xKreisMitte = 250; // x position des kreis
-var yKreisMitte = 250;
+var xKreisMitte = 250; // x position des kreismittelpunktes
+var yKreisMitte = 250; // y position des kreismittelpunktes
 var rKreis = 50;
+var durchmesserKreis = 2 * rKreis;
 
 // Punkt 1, init
 var x = 193; // x position der punktmitte
 var y = 61; // y position der punktmitte
 const r = 30; // radius
+const durchmesserPunkt = 2 * r;
 
 // Punkt 2 -->  werte um die richtung des punkts zu berechnen --> verändert sich
 var dx = 3;
@@ -38,20 +45,19 @@ var dy = 1;
 var newX;
 var newY;
 
-// Norm = Distanz zwischen Mitte Punkt 1 und 2
+// Norm = Distanz zwischen Mitte Punkt 1 und Kreis
 var normVectorPK;
 
-document.getElementById("distanz").innerText = calculateNorm(x, y, xKreisMitte, yKreisMitte) - r - rKreis; // init 117
+
+document.getElementById("distanz").innerText = Math.round(calculateNorm(x, y, xKreisMitte, yKreisMitte) - r - rKreis); // init 117
 
 
-// test
-
+////////////////// action buttons /////////////////////
 
 function startAnimation() {
   if (timerFunction == null) {
     timerFunction = setInterval(animate, 20);
   }
-
 }
 
 function stopAnimation() {
@@ -65,38 +71,61 @@ function stopAnimation() {
 function resetAnimation() {
   resetCircle();
   resetPoint();
+  animate();
 }
 
-function resetCircle() {
-  // set radius and position of kreis randomly
+////////////////// resets /////////////////////
+
+
+function resetCircle() { /// done
+                         // set radius and position of kreis randomly
   rKreis = Math.round(Math.random() * 100);
-  xKreisMitte = Math.round(Math.random() * (498 - 2 * rKreis) + rKreis);
-  yKreisMitte = Math.round(Math.random() * (498 - 2 * rKreis) + rKreis);
+  xKreisMitte = Math.round((Math.random() * (quadratSeiteInnen - durchmesserKreis * 2)) + durchmesserKreis);
+  yKreisMitte = Math.round((Math.random() * (quadratSeiteInnen - durchmesserKreis * 2)) + durchmesserKreis);
+  console.log(xKreisMitte, yKreisMitte);
   circle.setAttribute("cx", xKreisMitte);
   circle.setAttribute("cy", yKreisMitte);
   circle.setAttribute("r", rKreis);
 }
 
 function resetPoint() {
-//Aufgabe b)
-  // Norm Mittelpunkt zu Mittelpunkt muss grösser als Radius plus Radius sein.
-  var nextX = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
-  var nextY = Math.round(Math.random() * (500 - 2 - 2 * r) + r);
-  var xKomponenteVektorMM = (nextX - xKreisMitte);
-  var yKomponenteVektorMM = (nextY - yKreisMitte);
-  var normVectorMM = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMM, 2) + Math.pow(yKomponenteVektorMM, 2)));
 
-  if (normVectorMM > r + rKreis) {
+
+  var nextX = Math.round((Math.random() * (quadratSeiteInnen - durchmesserPunkt * 2)) + durchmesserPunkt);
+  var nextY = Math.round((Math.random() * (quadratSeiteInnen - durchmesserPunkt * 2)) + durchmesserPunkt);
+
+
+  // var normVectorMM = Math.sqrt(Math.pow(xKomponenteVektorMM, 2) + Math.pow(yKomponenteVektorMM, 2));
+  var normVectorcalc = Math.round(calculateNorm(nextX, nextY, xKreisMitte, yKreisMitte));
+  let distanz = normVectorcalc - (r + rKreis);
+
+  // console.log("norm", normVectorMM);
+  console.log("norm ca", normVectorcalc);
+  console.log("radius punkt ", r);
+  console.log("radius kreis gr ", rKreis);
+  console.log("different  ", normVectorcalc-(r+rKreis));
+
+  document.getElementById("distanz").innerText = distanz;
+
+
+  //Aufgabe b)
+  // Wenn die Norm von Mittelpunkt zu Mittelpunkt grösser ist als der Radius Kreis plus Radius Punkt, dann
+  // gibt es einen Abstand zwischen den beiden. Andernfalls überlappen die Kreise --> dies muss verhindert werden
+  if (distanz>0) {
     punkt.setAttribute("cx", nextX);
     punkt.setAttribute("cy", nextY);
+
   } else {
     console.log("Bitte neue Werte generieren!")
   }
 
   // Setze 'Richtung' durch P2
-  dx = Math.round(Math.random() * 5 - 10);
-  dy = Math.round(Math.random() * 5 - 10);
+  dx = Math.round(Math.random() * 5);
+  dy = Math.round(Math.random() * 5);
 }
+
+////////////////// animate & reflect /////////////////////
+
 
 function animate() {
   x = punkt.getAttribute("cx");
@@ -111,16 +140,16 @@ function animate() {
 
   reflectPointOnCirlce();
 
-  if (newX > (500 - r - 1)) { // crash with right border (minus borderline)
+  if (newX > (500 - r - 2)) { // crash with right border (minus borderline)
     dx = -dx;
   }
-  if (newX < (0 + r + 1)) { // crash with left border
+  if (newX < (0 + r + 2)) { // crash with left border
     dx = -dx;
   }
-  if (newY > (500 - r - 1)) { // crash with bottom border
+  if (newY > (500 - r - 2)) { // crash with bottom border
     dy = -dy;
   }
-  if (newY < (0 + r + 1)) { // crash with top border
+  if (newY < (0 + r + 2)) { // crash with top border
     dy = -dy;
   }
 
@@ -129,8 +158,10 @@ function animate() {
   punkt.setAttribute("cy", newY);
 
   //c)
-  document.getElementById("distanz").innerText = calculateNorm(newX, newY, xKreisMitte, yKreisMitte) - r - rKreis;
+  document.getElementById("distanz").innerText =
+    Math.round(calculateNorm(newX, newY, xKreisMitte, yKreisMitte) - r - rKreis);
 }
+
 
 //Aufgabe a)
 function reflectPointOnCirlce() {
@@ -142,23 +173,26 @@ function reflectPointOnCirlce() {
   var yKomponenteVektorMP = (newY - yKreisMitte);
 
   var normVectorMP = Math.round(Math.sqrt(Math.pow(xKomponenteVektorMP, 2) + Math.pow(yKomponenteVektorMP, 2)));
+var diszanz = normVectorMP - (rKreis+r);
 
-  if (normVectorMP <= (rKreis + r)) {
+
+  if (normVectorMP < (rKreis + r)) {
     console.log("/////////////////   bounce back /////////////////   ");
     dy = -dy;
     dx = -dy;
   }
+
+
 }
 
 //Aufgabe c) // todo: check aufgabe 3
 function calculateNorm(xPunkt, yPunkt, xKreis, yKreis) {
   let xKomponenteVektorPK = (xKreis - xPunkt);
   let yKomponenteVektorPK = (yKreis - yPunkt);
-  normVectorPK = Math.round(Math.sqrt(Math.pow(xKomponenteVektorPK, 2) + Math.pow(yKomponenteVektorPK, 2)));
+  normVectorPK = Math.sqrt(Math.pow(xKomponenteVektorPK, 2) + Math.pow(yKomponenteVektorPK, 2));
   return normVectorPK;
 
 }
-
 
 
 
